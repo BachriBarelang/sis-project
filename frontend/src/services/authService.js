@@ -12,3 +12,6 @@ export const getProfile = async () => {
   return response.data
 }
 
+export const registerAdmin = (data) => {
+  return api.post('/register-admin', data)
+}
