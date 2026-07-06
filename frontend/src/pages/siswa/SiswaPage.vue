@@ -75,28 +75,21 @@ onMounted(() => {
 })
 
 const saveStudent = async (data) => {
-  let success = false
+  let result
 
   if (data.id) {
-    success = await studentStore.editStudent(
-      data.id,
-      data
-    )
+    result = await studentStore.editStudent(data.id, data)
   } else {
-    success = await studentStore.addStudent(data)
+    result = await studentStore.addStudent(data)
   }
 
-  if (success) {
+  if (result.success) {
     dialog.value = false
-
     selectedStudent.value = null
-
-    snackbarText.value = data.id
-      ? 'Siswa berhasil diupdate'
-      : 'Siswa berhasil ditambahkan'
-
-    snackbar.value = true
   }
+
+  snackbarText.value = result.message
+  snackbar.value = true
 }
 
 const selectedStudent = ref(null)

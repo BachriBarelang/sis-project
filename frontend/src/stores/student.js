@@ -29,30 +29,52 @@ export const useStudentStore = defineStore('student', {
     async addStudent(payload) {
       try {
         await createStudent(payload)
-
         await this.fetchStudents()
 
-        return true
+        return {
+          success: true,
+          message: 'Siswa berhasil ditambahkan',
+        }
+
       } catch (error) {
         console.error(error)
 
-        return false
+        const message =
+          error.response?.data?.errors?.nis?.[0] ||
+          error.response?.data?.message ||
+          'Gagal menambahkan siswa'
+
+        return {
+          success: false,
+          message,
+        }
       }
     },
 
-    async editStudent(id, payload) {
-      try {
-        await updateStudent(id, payload)
+  async editStudent(id, payload) {
+    try {
+      await updateStudent(id, payload)
+      await this.fetchStudents()
 
-        await this.fetchStudents()
-
-        return true
-      } catch (error) {
-        console.error(error)
-
-        return false
+      return {
+        success: true,
+        message: 'Siswa berhasil diupdate',
       }
-    },
+
+    } catch (error) {
+      console.error(error)
+
+      const message =
+        error.response?.data?.errors?.nis?.[0] ||
+        error.response?.data?.message ||
+        'Gagal mengupdate siswa'
+
+      return {
+        success: false,
+        message,
+      }
+    }
+  },
 
     async removeStudent(id) {
       try {

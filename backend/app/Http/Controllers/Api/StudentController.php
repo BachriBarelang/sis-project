@@ -39,15 +39,23 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    public function update(
-        Request $request,
-        SchoolClass $schoolClass
-    )
+    public function update(Request $request, Student $student)
     {
-        dd([
-            'model' => $schoolClass,
-            'payload' => $request->all(),
+        $validated = $request->validate([
+            'nis' => 'required|unique:students,nis,' . $student->id,
+            'name' => 'required',
+            'gender' => 'required',
         ]);
+
+        $student->update([
+            'nis' => $validated['nis'],
+            'name' => $validated['name'],
+            'gender' => $validated['gender'],
+            'birth_date' => $request->birth_date,
+            'address' => $request->address,
+        ]);
+
+        return response()->json($student);
     }
 
     public function destroy(Student $student)
