@@ -82,27 +82,23 @@ const saveTeacher = async (data) => {
   let success = false
 
   if (data.id) {
-    success = await teacherStore.editTeacher(
-      data.id,
-      data
-    )
+    success = await teacherStore.editTeacher(data.id, data)
   } else {
-    success = await teacherStore.addTeacher(
-      data
-    )
+    success = await teacherStore.addTeacher(data)
   }
 
   if (success) {
     dialog.value = false
-
     selectedTeacher.value = null
 
     snackbarText.value = data.id
       ? 'Guru berhasil diupdate'
       : 'Guru berhasil ditambahkan'
-
-    snackbar.value = true
+  } else {
+    snackbarText.value = 'Terjadi kesalahan / NIP sudah digunakan'
   }
+
+  snackbar.value = true
 }
 
 const editTeacher = (teacher) => {
@@ -118,19 +114,16 @@ const openDeleteDialog = (teacher) => {
 }
 
 const deleteTeacher = async () => {
-  const success =
-    await teacherStore.removeTeacher(
-      selectedId.value
-    )
+  const success = await teacherStore.removeTeacher(selectedId.value)
 
   if (success) {
     deleteDialog.value = false
-
-    snackbarText.value =
-      'Guru berhasil dihapus'
-
-    snackbar.value = true
+    snackbarText.value = 'Guru berhasil dihapus'
+  } else {
+    snackbarText.value = 'Gagal menghapus guru'
   }
+
+  snackbar.value = true
 }
 </script>
 

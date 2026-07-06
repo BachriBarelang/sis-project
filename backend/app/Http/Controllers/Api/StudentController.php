@@ -17,19 +17,23 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nis' => 'required|unique:students',
-            'name' => 'required',
-            'gender' => 'required',
-        ]);
+        $validated = $request->validate(
+            [
+                'nis' => 'required|unique:students,nis',
+                'name' => 'required',
+                'gender' => 'required',
+                'birth_date' => 'nullable|date',
+                'address' => 'nullable|string',
+            ],
+            [
+                'nis.required' => 'NIS wajib diisi',
+                'nis.unique' => 'NIS sudah digunakan',
+                'name.required' => 'Nama siswa wajib diisi',
+                'gender.required' => 'Jenis kelamin wajib dipilih',
+            ]
+        );
 
-        $student = Student::create([
-            'nis' => $request->nis,
-            'name' => $request->name,
-            'gender' => $request->gender,
-            'birth_date' => $request->birth_date,
-            'address' => $request->address,
-        ]);
+        $student = Student::create($validated);
 
         return response()->json($student);
     }
@@ -41,19 +45,23 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student)
     {
-        $validated = $request->validate([
-            'nis' => 'required|unique:students,nis,' . $student->id,
-            'name' => 'required',
-            'gender' => 'required',
-        ]);
+        $validated = $request->validate(
+            [
+                'nis' => 'required|unique:students,nis,' . $student->id,
+                'name' => 'required',
+                'gender' => 'required',
+                'birth_date' => 'nullable|date',
+                'address' => 'nullable|string',
+            ],
+            [
+                'nis.required' => 'NIS wajib diisi',
+                'nis.unique' => 'NIS sudah digunakan',
+                'name.required' => 'Nama siswa wajib diisi',
+                'gender.required' => 'Jenis kelamin wajib dipilih',
+            ]
+        );
 
-        $student->update([
-            'nis' => $validated['nis'],
-            'name' => $validated['name'],
-            'gender' => $validated['gender'],
-            'birth_date' => $request->birth_date,
-            'address' => $request->address,
-        ]);
+        $student->update($validated);
 
         return response()->json($student);
     }

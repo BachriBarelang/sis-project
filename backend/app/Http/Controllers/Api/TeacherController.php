@@ -17,20 +17,25 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nip' => 'required|unique:teachers',
-            'name' => 'required',
-            'gender' => 'required',
-        ]);
+        $validated = $request->validate(
+            [
+                'nip' => 'required|unique:teachers,nip',
+                'name' => 'required',
+                'gender' => 'required',
+                'birth_date' => 'nullable|date',
+                'phone' => 'nullable|string',
+                'address' => 'nullable|string',
+            ],
+            [
+                'nip.required' => 'NIP wajib diisi',
+                'nip.unique' => 'NIP sudah digunakan',
 
-        $teacher = Teacher::create([
-            'nip' => $request->nip,
-            'name' => $request->name,
-            'gender' => $request->gender,
-            'birth_date' => $request->birth_date,
-            'phone' => $request->phone,
-            'address' => $request->address,
-        ]);
+                'name.required' => 'Nama guru wajib diisi',
+                'gender.required' => 'Jenis kelamin wajib dipilih',
+            ]
+        );
+
+        $teacher = Teacher::create($validated);
 
         return response()->json($teacher);
     }
@@ -40,18 +45,27 @@ class TeacherController extends Controller
         return response()->json($teacher);
     }
 
-    public function update(
-        Request $request,
-        Teacher $teacher
-    ) {
-        $teacher->update([
-            'nip' => $request->nip,
-            'name' => $request->name,
-            'gender' => $request->gender,
-            'birth_date' => $request->birth_date,
-            'phone' => $request->phone,
-            'address' => $request->address,
-        ]);
+    public function update(Request $request, Teacher $teacher)
+    {
+        $validated = $request->validate(
+            [
+                'nip' => 'required|unique:teachers,nip,' . $teacher->id,
+                'name' => 'required',
+                'gender' => 'required',
+                'birth_date' => 'nullable|date',
+                'phone' => 'nullable|string',
+                'address' => 'nullable|string',
+            ],
+            [
+                'nip.required' => 'NIP wajib diisi',
+                'nip.unique' => 'NIP sudah digunakan',
+
+                'name.required' => 'Nama guru wajib diisi',
+                'gender.required' => 'Jenis kelamin wajib dipilih',
+            ]
+        );
+
+        $teacher->update($validated);
 
         return response()->json($teacher);
     }

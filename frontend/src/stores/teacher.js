@@ -17,7 +17,6 @@ export const useTeacherStore = defineStore('teacher', {
     async fetchTeachers() {
       try {
         this.loading = true
-
         this.teachers = await getTeachers()
       } catch (error) {
         console.error(error)
@@ -29,13 +28,10 @@ export const useTeacherStore = defineStore('teacher', {
     async addTeacher(payload) {
       try {
         await createTeacher(payload)
-
         await this.fetchTeachers()
-
         return true
       } catch (error) {
         console.error(error)
-
         return false
       }
     },
@@ -43,13 +39,10 @@ export const useTeacherStore = defineStore('teacher', {
     async editTeacher(id, payload) {
       try {
         await updateTeacher(id, payload)
-
         await this.fetchTeachers()
-
         return true
       } catch (error) {
         console.error(error)
-
         return false
       }
     },
@@ -57,13 +50,10 @@ export const useTeacherStore = defineStore('teacher', {
     async removeTeacher(id) {
       try {
         await deleteTeacher(id)
-
         await this.fetchTeachers()
-
         return true
       } catch (error) {
         console.error(error)
-
         return false
       }
     },
